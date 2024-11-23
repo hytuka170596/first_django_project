@@ -1,0 +1,23 @@
+{% extends 'blogapp/base.html' %}
+
+{% load i18n %}
+
+{% block title %}
+    {% translate "Article Create" %}
+{% endblock %}
+{% block body %}
+  <div>
+    <h1>{% translate "Create a new article" %}</h1>
+    <form method="POST" style="margin-top: 20px;">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">{% translate "Create article" %}</button>
+    </form>
+    <div class="mt-2">
+      <a href="{% url 'blogapp:articles_list' %}" class="btn btn-secondary">{% translate "Back to list of articles" %}</a>
+    </div>
+  </div>
+    <div>
+        <a href="{% url 'blogapp:articles_list' %}">{% translate "Back to list of articles" %}</a>
+    </div>
+{% endblock body %}

@@ -1,0 +1,60 @@
+{% extends 'shopapp/base.html' %}
+
+{% load i18n %}
+{% load cache %}
+
+{% block title %}
+  {% translate "Orders list" %}
+{% endblock %}
+
+{% block body %}
+<h1> {% translate "Orders" %}: </h1>
+  <div>
+    {% if object_list %}
+	    {% for order in object_list %}
+	      <div>
+	        <p><a href="{% url 'shopapp:order_details' pk=order.pk %}"
+	        >{% translate "Details" %} {{order.pk }}</a></p>
+	        <p> {% translate "Order by" %}:
+		        <a href="{% url 'myauth:profile-details' pk=order.user_id %}"
+		        > {% firstof order.user.first_name order.user.username %} </a></p>
+			  {% cache 60 order_info owner.pk %}
+			  {% with order.promocode as promocode %}
+			  {% with order.delivery_address as delivery_address %}
+		 	  {% with order.phone as phone %}
+				{% blocktranslate %}
+				<p> Promocode: <code> ({{ promocode }}) </code></p>
+				<p> Delivery address: {{ delivery_address }} </p>
+				<p> Number phone: {{ phone }} </p>
+	        <div>
+	          Products in order:
+				{% endblocktranslate %}
+			  {% endwith %}
+			  {% endwith %}
+			  {% endwith %}
+
+	          <ul>
+	            {% for product in order.products.all%}
+	            <li> -- <a href="{% url 'shopapp:product_details' pk=product.pk %}"
+	            >{{ product.name }}</a> for {{ product.price }} {% firstof product.discount 'no discount' %}</li>
+		          {% empty %}
+		          <li> -- {% translate "No products in order" %} </li>
+	            {% endfor %}
+				  {% endcache %}
+	          </ul>
+	        
+	        </div>
+	      </div>
+	    {% endfor %}
+
+    {% else %}
+      <h3>{% translate "No orders yet" %}</h3>
+    {% endif %}
+  </div>
+	<div>
+		<a href="{% url 'shopapp:order_create' %}"
+		   > {% translate "Back to create order" %} </a>
+	</div>
+
+{% endblock %}
+

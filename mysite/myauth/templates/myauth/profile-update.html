@@ -1,0 +1,54 @@
+{% extends 'myauth/base.html' %}
+{% load i18n %}
+{% block title %}
+    {% translate "Update Profile" %}
+{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4">{% translate "Update Profile" %}</h1>
+
+    <div class="card shadow-lg">
+        <div class="card-body text-center">
+            {% if profile.avatar %}
+                <img class="img-fluid mb-3 rounded"
+                     style="width: 400px; height: 450px;"
+                     src="{{ profile.avatar.url }}"
+                     alt="{{ profile.avatar.name }}">
+            {% else %}
+                <p class="text-muted">{% translate "No avatar uploaded" %}</p>
+            {% endif %}
+
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    {{ form.as_p }}
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg">{% translate "Edit Profile" %}</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="mt-4 text-center">
+        <a class="btn btn-secondary" href="{% url 'myauth:profiles-list' %}">{% translate "Back to list of profiles" %}</a>
+        <a class="btn btn-secondary" href="{% url 'myauth:about-me' %}">{% translate "Back to my profile" %}</a>
+    </div>
+</div>
+
+<style>
+    .card {
+        border-radius: 15px;
+    }
+    .card-body {
+        padding: 2rem;
+    }
+    h1 {
+        font-family: 'Arial', sans-serif;
+        color: #333;
+    }
+    .btn-lg {
+        padding: 10px 20px;
+        font-size: 1.2rem;
+    }
+</style>
+{% endblock %}

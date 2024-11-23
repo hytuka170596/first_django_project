@@ -1,0 +1,20 @@
+{% extends "requestdataapp/base.html" %}
+
+{% block title %}
+	Error 429
+{% endblock %}
+
+{% block body %}
+
+    <h1 style="color:black; position: relative;">
+        <img
+            src="https://sitechecker.pro/wp-content/uploads/2023/07/429-status-code.png"
+            alt="Error Image"
+            style="max-width: 100%; height: auto;"
+        />
+        <span style="position: absolute; top: 0; left: 0; text-align: center; width: 100%;">
+            You have exceeded the request limit per minute. Please wait one minute.
+        </span>
+    </h1>
+
+{% endblock %}

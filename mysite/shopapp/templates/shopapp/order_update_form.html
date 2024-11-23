@@ -1,0 +1,21 @@
+{% extends 'shopapp/base.html' %}
+
+{% load i18n %}
+{% block title %}
+	{% translate "Update Order" %}
+{% endblock title %}
+
+{% block body %}
+	<h1> {% translate "Update order" %} </h1>
+	<div>
+		<form method="POST">
+			{% csrf_token %}
+			{{ form.as_p }}
+			<button type="submit">{% translate "Update" %}</button>
+		</form>
+	</div>
+	<div>
+		<a href="{% url 'shopapp:order_details' pk=object.pk %}"
+			>{% translate "Back to detail" %} №{{ object.pk }}</a>
+	</div>
+{% endblock body %}

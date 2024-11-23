@@ -1,0 +1,21 @@
+{% extends "requestdataapp/base.html" %}
+
+{% block title %}
+    File Size Error
+{% endblock %}
+
+{% block body %}
+
+    <div>
+        <h1 align="center" style="color: yellow; background-color: black;"> File Size Error</h1>
+	    <h2 align="center"  style="color: red; background-color: black;"> The uploaded file exceeds the specified maximum size (1 mb )</h2>
+        <a
+            href="https://yandex.ru/images/search?from=tabbar&img_url=https%3A%2F%2Ffotokonkurs.ru%2Fcache%2Fcomment_image_big%2Fcomments%2F2016%2F09%2F07%2F816705.jpg&lr=51&p=4&pos=29&rpt=simage&text=%D0%BA%D0%B0%D1%80%D1%82%D0%B8%D0%BD%D0%BA%D0%B0%20%D0%BE%D0%B1%20%D0%BE%D1%88%D0%B8%D0%B1%D0%BA%D0%B5%20%D0%BF%D1%80%D0%B8%20%D0%BE%D1%82%D0%BF%D1%80%D0%B0%D0%B2%D0%BA%D0%B5%20%D1%84%D0%B0%D0%B9%D0%BB%D0%B0">
+            <img
+                src="https://fotokonkurs.ru/cache/comment_image_big/comments/2016/09/07/816705.jpg"
+                alt="Error Image"
+                style="max-width: 100%; height: auto;"
+            />
+        </a>
+    </div>
+{% endblock %}

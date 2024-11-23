@@ -1,0 +1,30 @@
+{% extends 'shopapp/base.html' %}
+
+{% load i18n %}
+
+{% block title %}
+	{% translate "Create Product" %}
+{% endblock title %}
+
+{% block body %}
+{% if perms.shopapp.add_product %}
+	<h1> {% translate "Create a new product" %}</h1>
+	<div>
+
+		<h4 style="text-align: center; color: purple"> # {% translate "You can create products" %}. </h4>
+		
+		<form method="POST" enctype="multipart/form-data">
+			{% csrf_token %}
+			{{ form.as_p }}
+			<button type="submit">{% translate "Create" %}</button>
+		</form>
+
+	</div>
+	<div>
+		{% if perms.shopapp.view_product %}
+		<a href="{% url 'shopapp:products_list' %}">{% translate "Back to products list" %}</a>
+		{% endif %}
+	</div>
+
+{% endif %}
+{% endblock body %}

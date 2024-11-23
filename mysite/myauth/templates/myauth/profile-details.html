@@ -1,0 +1,49 @@
+{% extends 'myauth/base.html' %}
+{% load i18n %}
+{% block title %}
+
+    {% translate "Details of Profile" %} # {{ profile.id }}
+{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2 class="text-center">{% translate "Details for" %} <b>{{ profile.user.username }}</b></h2>
+
+    <div class="card">
+        <div class="card-body text-center">
+            {% if profile.avatar %}
+                <img class="img-fluid rounded-circle mb-5"
+                     style="width: 300px; height: 350px;"
+                     src="{{ profile.avatar.url }}"
+                     alt="{{ profile.avatar.name }}">
+            {% else %}
+                <h4 class="text-muted">{% translate "No avatar uploaded yet" %}</h4>
+
+                {% if profile.sex == 'male' %}
+                    <img style="width: 350px; height: 350px;"
+                     src="/media/accounts/mans_avatar.jpg">
+                {% elif profile.sex == 'female' %}
+                    <img style="width: 350px; height: 350px;"
+                     src="/media/accounts/girls_avatar.jpg">
+                {% endif %}
+            {% endif %}
+
+            <h5>{% translate "Username" %}: {{ profile.user.username|default:profile.username }}</h5>
+            <p><strong>{% translate "First name" %}:</strong> {{ profile.first_name }}</p>
+            <p><strong>{% translate "Last name" %}:</strong> {{ profile.last_name }}</p>
+            <p><strong>{% translate "Email" %}:</strong> {{ profile.email }}</p>
+            <p><strong>{% translate "Bio" %}:</strong><br> {{ profile.bio }}</p>
+        </div>
+    </div>
+
+    <div class="mt-4 text-center">
+        <a class="btn btn-primary" href="{% url 'myauth:profiles-list' %}">{% translate "Back to list of profiles" %}</a>
+    </div>
+
+    <div class="mt-3 text-center">
+        {% if perms.myauth.change_profile or user.is_staff %}
+            <a class="btn btn-warning" href="{% url 'myauth:profile-update' pk=profile.id %}">{% translate "Edit profile" %}</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

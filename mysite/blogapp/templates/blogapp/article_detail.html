@@ -1,0 +1,44 @@
+{% extends 'blogapp/base.html' %}
+
+{% load i18n %}
+
+{% block title %}
+    {% translate "Article Details" %} #{{ article.pk }}
+{% endblock %}
+{% block body %}
+    <h1>{% translate "Article details" %} </h1>
+    <div>
+        {% with article.title as title %}
+        {% with article.pub_date as pub_date %}
+        {% with article.author.name_author as name_author %}
+        {% with article.content as content %}
+        {% with article.category.name_category as name_category %}
+            {% blocktranslate %}
+                <div><b>Title:</b> {{ title }}</div>
+                <div><b>Content:</b> {{ content }}</div>
+                <div><b>Date of publication:</b> {{ pub_date }}</div>
+                <div><b>Author:</b> {{ name_author }}</div>
+                <div><b>Category:</b> {{ name_category }}</div>
+                <div><b>List of tags:</b> </div>
+            {% endblocktranslate %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+                    {% for tag in article.tags.all %}
+                        <ol>{{ tag.name_tag }}</ol>
+                    {% empty %}
+                        <p>{% translate "No tags yet" %}</p>
+                    {% endfor %}
+    </div>
+    <div>
+        <a href="{% url 'blogapp:articles_list' %}">{% translate "Back to list of articles" %}</a>
+    </div>
+    {% if perms.blogapp.change_article %}
+    <div>
+        <a href="{% url 'blogapp:article_update' pk=article.pk %}">{% translate "Update article" %}</a>
+    </div>
+    {% endif %}
+{% endblock %}
+<!--TODO added link for title, author, category, tags -->

@@ -1,0 +1,16 @@
+{% extends 'admin/base.html' %}
+{% load i18n %}
+{% block title %}
+    {% translate 'Upload csv file' %}
+{% endblock %}
+{% block content %}
+    <div>
+        <form action="." method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="submit-row">
+                <input type="submit" value="{% translate 'Upload CSV' %}">
+            </div>
+        </form>
+    </div>
+{% endblock %}

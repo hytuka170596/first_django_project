@@ -1,0 +1,46 @@
+{% extends 'myauth/base.html' %}
+{% load i18n %}
+{% load cache %}
+{% block title %}
+    {% translate "About Me" %}
+{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        {% if user.is_authenticated %}
+                <h1 class="text-center">{% translate "About Me" %}</h1>
+		{% cache 5 userinfo %}
+            <div class="card shadow mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">{% translate "Profile Information" %}</h5>
+                    <p><strong>{% translate "My ID" %}:</strong> {{ user.profile.id }}</p>
+                    <p><strong>{% translate "Username" %}:</strong> {{ user.profile.username|default:user.username }}</p>
+                    <p><strong>{% translate "First Name" %}:</strong> {{ user.profile.first_name }}</p>
+                    <p><strong>{% translate "Last Name" %}:</strong> {{ user.profile.last_name }}</p>
+                    <p><strong>{% translate "Email" %}:</strong> {{ user.profile.email }}</p>
+                    <p><strong>{% translate "Bio" %}:</strong><br>{{ user.profile.bio }}</p>
+                    {% if user.profile.avatar %}
+                        <img class="img-fluid" style="max-width: 40%; height: auto;" src="{{ user.profile.avatar.url }}" alt="{{ user.profile.avatar.name }}">
+                    {% else %}
+                        <h4 class="text-muted">{% translate "No avatar uploaded yet" %}</h4>
+                    {% endif %}
+                </div>
+            </div>
+		{% endcache %}
+        {% else %}
+            <h2 class="text-danger">{% translate "User  is anonymous" %}</h2>
+        {% endif %}
+        {% if user.is_authenticated %}
+        <div class="d-flex justify-content-between mt-4">
+            <a href="{% url 'myauth:profiles-list' %}" class="btn btn-secondary">{% translate "Back to list of profiles" %}</a>
+            <a href="{% url 'myauth:profile-update' pk=user.profile.id %}" class="btn btn-warning">{% translate "Edit profile" %}</a>
+        </div>
+    </div>
+
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        {% endif %}
+{% endblock %}

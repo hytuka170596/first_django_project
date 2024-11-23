@@ -1,0 +1,32 @@
+{% extends 'myauth/base.html' %}
+{% load i18n %}
+{% block title %}
+    {% translate "Profiles list" %}
+{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4">{% translate "Profiles" %}:</h1>
+
+    {% if profiles %}
+        <div class="list-group">
+            {% for profile in profiles %}
+                <a href="{% url 'myauth:profile-details' pk=profile.id %}" class="list-group-item list-group-item-action">
+                    {{ profile.user.username }}
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <h3 class="text-center text-muted">{% translate "No profiles found" %}</h3>
+    {% endif %}
+</div>
+
+<style>
+    h1 {
+        font-family: 'Arial', sans-serif;
+        color: #333;
+    }
+</style>
+{% endblock %}
+
+Find More

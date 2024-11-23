@@ -1,0 +1,22 @@
+{% extends 'shopapp/base.html' %}
+
+{% block title %}
+	User №{{ user.pk }}
+{% endblock %}
+
+{%block body %}
+	<h1> Details for {{ user.username }} </h1>
+	<div>
+		<div>Name: {{ user.first_name }}</div>
+		<div>Last name: {{ user.last_name }}</div>
+		<div>Email address: {{ user.email }}</div>
+		<div>Staff status: {{ user.is_staff }}</div>
+		<div>The time of the registration: {{ user.date_joined }}</div>
+		<div>Status supesuser: {{ user.is_superuser }}</div>
+		<div>The time of the last connection: {{ user.last_login }}</div>
+	</div>
+	<div>
+	
+	</div>
+<br>
+{% endblock %}

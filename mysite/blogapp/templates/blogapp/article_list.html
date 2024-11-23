@@ -1,0 +1,55 @@
+{% extends 'blogapp/base.html' %}
+
+{% load i18n %}
+{% get_current_language as current_language %}
+
+{% block title %}
+    {% translate "Article List" %}
+{% endblock %}
+{% block body %}
+    <div>
+        <h1>{% translate "Article list" %}:</h1>
+            <p>{% blocktranslate count article_count=articles|length %}
+            There is only one article.
+            {% plural %}
+            There are {{ article_count }} articles.
+            {% endblocktranslate %}</p>
+        <ol>
+        {% for article in articles %}
+
+            {{ current_language }}
+            <li><br>
+                {% with article.title as title %}
+                {% with article.pub_date as pub_date %}
+                {% with article.author.name_author as name_author %}
+                {% with article.category.name_category as name_category %}
+                    <p><b>{% translate "Title:" %}</b>
+                        <a href="{% url 'blogapp:article_detail' pk=article.pk %}">{{ title }}</a>
+                    </p>
+                    <p><b>{% translate "Date of publication:" %}</b> {{ pub_date }}</p>
+                    <p><b>{% translate "Author:" %}</b> {{ name_author }}</p>
+                    <p><b>{% translate "Category:" %}</b> {{ name_category }}</p>
+                    <p><b>{% translate "List of tags:" %}</b></p>
+                {% endwith %}
+                {% endwith %}
+                {% endwith %}
+                {% endwith %}
+                    <ul>
+                    {% for tag in article.tags.all %}
+                        <li>{{ tag.name_tag }}</li>
+                        {% empty %}
+                        <p>{% translate "No tags yet" %}</p>
+                        {% endfor %}
+                    </ul>
+                        <p>{% blocktranslate count tags_count=article.tags.all|length %}
+                        There is only one tag.
+                        {% plural %}
+                        There are {{ tags_count }} tags.
+                        {% endblocktranslate %}</p>
+        {% empty %}
+            <p>{% translate "No articles yet" %}</p>
+            </li>
+        {% endfor %}
+        </ol>
+    </div>
+{% endblock %}

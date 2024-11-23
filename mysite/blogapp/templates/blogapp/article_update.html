@@ -1,0 +1,24 @@
+{% extends 'blogapp/base.html' %}
+
+{% load i18n %}
+
+{% block title %}
+    {% translate "Article Update" %} #{{ article.pk }}
+{% endblock %}
+{% block body %}
+    <h1>{% translate "Article update" %}</h1>
+    <div>
+		<form method="POST" enctype="multipart/form-data">
+			{% csrf_token %}
+			{{ form.as_p }}
+			<button type="submit">{% translate "Update" %}</button>
+		</form>
+	</div>
+    <div>
+        <a href="{% url 'blogapp:articles_list' %}">{% translate "Back to list of articles" %}</a>
+    </div>
+    <div>
+        <a href="{% url 'blogapp:article_detail' pk=article.pk %}">{% translate "Back to detail of article" %}</a>
+    </div>
+
+{% endblock %}
