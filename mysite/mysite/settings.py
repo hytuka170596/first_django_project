@@ -296,10 +296,23 @@ LOGGING = {
             "backupCount": LOGFILE_COUNT,
             "formatter": "verbose",
         },
+        'loki': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.HTTPHandler',
+            'host': 'localhost',  # URL Loki
+            'url': '/loki/api/v1/push', # взято из доки
+            'method': 'POST',
+            'formatter': 'verbose',
+        },
     },
     "root": {
         "handlers": ["console", "logfile"],
         "level": "INFO",
+    },
+    'django': {
+        'handlers': ['file', 'loki'],
+        'level': getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
+        'propagate': True,
     },
 }
 
