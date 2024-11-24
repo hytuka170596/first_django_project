@@ -85,50 +85,45 @@ class MultipleImageInput(forms.ClearableFileInput):
 
 
 class MultipleImageField(forms.FileField):
-    def __init__(self, *args, images: Union[List[ImageFile], ImageFile], initial=None, **kwargs):
-        super().__init__(*args, initial=initial, **kwargs)
-        self.images = images
+    """
+    Custom form field for handling multiple image uploads.
 
-# class MultipleImageField(forms.FileField):
-#     """
-#     Custom form field for handling multiple image uploads.
+    Args:
+        *args: Positional arguments for the parent class.
+        **kwargs: Keyword arguments for the parent class.
 
-#     Args:
-#         *args: Positional arguments for the parent class.
-#         **kwargs: Keyword arguments for the parent class.
+    Methods:
+        clean(images: Union[List[files], files], initial=None) -> Union[List[files], files]:
+            Cleans and validates uploaded images.
+    """
 
-#     Methods:
-#         clean(images: Union[List[files], files], initial=None) -> Union[List[files], files]:
-#             Cleans and validates uploaded images.
-#     """
+    def __init__(self, *args, **kwargs) -> None:
+        kwargs.setdefault("widget", MultipleImageInput())
+        super().__init__(*args, **kwargs)
 
-#     def __init__(self, *args, **kwargs) -> None:
-#         kwargs.setdefault("widget", MultipleImageInput())
-#         super().__init__(*args, **kwargs)
+    def clean(
+        self, images: Union[List[ImageFile], ImageFile], initial=None
+    ) -> Union[List[ImageFile], ImageFile]:
+        """
+        Clean and validate uploaded images.
 
-#     def clean(
-#         self, images: Union[List[ImageFile], ImageFile], initial=None
-#     ) -> Union[List[ImageFile], ImageFile]:
-#         """
-#         Clean and validate uploaded images.
+        Args:
+            images (Union[List[ImageFile], ImageFile]): The uploaded images to clean.
+            initial: Initial data for cleaning.
 
-#         Args:
-#             images (Union[List[ImageFile], ImageFile]): The uploaded images to clean.
-#             initial: Initial data for cleaning.
+        Returns:
+            Union[List[ImageFile], ImageFile]: A list of cleaned images or a single cleaned image.
+        """
 
-#         Returns:
-#             Union[List[ImageFile], ImageFile]: A list of cleaned images or a single cleaned image.
-#         """
+        single_file_clean = super().clean
+        if isinstance(images, (list, tuple)):
+            result: List[ImageFile] = [
+                single_file_clean(image, initial) for image in images
+            ]
+        else:
+            result: ImageFile = [single_file_clean(images, initial)]
 
-#         single_file_clean = super().clean
-#         if isinstance(images, (list, tuple)):
-#             result: List[ImageFile] = [
-#                 single_file_clean(image, initial) for image in images
-#             ]
-#         else:
-#             result: ImageFile = [single_file_clean(images, initial)]
-
-#         return result
+        return result
 
 
 class ProductForm(forms.ModelForm):
