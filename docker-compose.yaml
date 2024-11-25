@@ -1,6 +1,6 @@
 services:
   app:
-    container_name: django_container
+    container_name: django
     build:
       dockerfile: ./Dockerfile
     command:
@@ -28,7 +28,7 @@ services:
       options:
         loki-url: http://localhost:3100/loki/api/v1/push
     image: redis:latest
-    container_name: redis_container
+    container_name: redis
     environment:
       - REDIS_PASSWORD=${REDIS_PASSWORD}
       - REDIS_USER=${REDIS_USER}
@@ -66,6 +66,7 @@ services:
     stdin_open: true
 
   grafana:
+    container_name: grafana
     hostname: grafana
     environment:
       - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
@@ -79,6 +80,7 @@ services:
       - "3000:3000"
 
   loki:
+    container_name: loki
     hostname: loki
     image: grafana/loki:2.9.0
     ports:
