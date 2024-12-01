@@ -1,8 +1,29 @@
 services:
-  app:
-    container_name: django
+
+  postgres_database:
+    container_name: postgres_container
     build:
-      dockerfile: ./Dockerfile
+      context: ./postgres
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_HOST: ${DB_HOST}
+      POSTGRES_PORT: ${DB_PORT}
+    volumes:
+      - pgdbdata:/var/lib/postgresql/data/
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"
+
+  django:
+    container_name: django_container
+    build:
+      context: .
+      dockerfile: Dockerfile
     command:
       - "gunicorn"
       - "mysite.wsgi:application"
@@ -17,10 +38,8 @@ services:
       driver: loki
       options:
         loki-url: http://localhost:3100/loki/api/v1/push
-    volumes:
-      - ./mysite/database:/app/database
     depends_on:
-      - redis
+      - postgres_database
 
   redis:
     logging:
@@ -28,45 +47,12 @@ services:
       options:
         loki-url: http://localhost:3100/loki/api/v1/push
     image: redis:latest
-    container_name: redis
-    environment:
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
-      - REDIS_USER=${REDIS_USER}
-      - REDIS_USER_PASSWORD=${REDIS_USER_PASSWORD}
+    container_name: redis_container
     ports:
       - "6380:6379"
-    volumes:
-      - ./redisdata:/data
-    deploy:
-      resources:
-        limits:
-          cpus: '0.50'
-          memory: 512M
-        reservations:
-          cpus: '0.25'
-          memory: 256M
-    command: >
-      sh -c '
-        mkdir -p /usr/local/etc/redis &&
-        echo "bind 0.0.0.0" > /usr/local/etc/redis/redis.conf &&
-        echo "requirepass $REDIS_PASSWORD" >> /usr/local/etc/redis/redis.conf &&
-        echo "appendonly yes" >> /usr/local/etc/redis/redis.conf &&
-        echo "appendfsync everysec" >> /usr/local/etc/redis/redis.conf &&
-        echo "user default on nopass ~* +@all" > /usr/local/etc/redis/users.acl &&
-        echo "user $REDIS_USER on >$REDIS_USER_PASSWORD ~* +@all" >> /usr/local/etc/redis/users.acl &&
-        redis-server /usr/local/etc/redis/redis.conf --aclfile /usr/local/etc/redis/users.acl
-      '
-    healthcheck:
-      test: ["CMD", "redis-cli", "-a", "$REDIS_PASSWORD", "ping"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-    restart: unless-stopped
-    tty: true
-    stdin_open: true
 
   grafana:
-    container_name: grafana
+    container_name: grafana_container
     hostname: grafana
     environment:
       - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
@@ -80,8 +66,11 @@ services:
       - "3000:3000"
 
   loki:
-    container_name: loki
+    container_name: loki_container
     hostname: loki
     image: grafana/loki:2.9.0
     ports:
       - "3100:3100"
+
+volumes:
+  pgdbdata: null
