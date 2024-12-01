@@ -1,5 +1,4 @@
 services:
-
   postgres_database:
     container_name: postgres_container
     build:
