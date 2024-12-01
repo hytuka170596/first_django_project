@@ -1,7 +1,28 @@
 services:
-  app:
+  postgres_database:
+    container_name: postgres_container
     build:
-      dockerfile: ./Dockerfile
+      context: ./postgres
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_HOST: ${DB_HOST}
+      POSTGRES_PORT: ${DB_PORT}
+    volumes:
+      - pgdbdata:/var/lib/postgresql/data/
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"
+
+  django:
+    container_name: django_container
+    build:
+      context: .
+      dockerfile: Dockerfile
     command:
       - "gunicorn"
       - "mysite.wsgi:application"
@@ -13,9 +34,42 @@ services:
     env_file:
       - .env
     logging:
-      driver: "json-file"
+      driver: loki
       options:
-        max-file: "10"
-        max-size: "300k"
+        loki-url: http://localhost:3100/loki/api/v1/push
+    depends_on:
+      - postgres_database
+
+  redis:
+    logging:
+      driver: loki
+      options:
+        loki-url: http://localhost:3100/loki/api/v1/push
+    image: redis:latest
+    container_name: redis_container
+    ports:
+      - "6380:6379"
+
+  grafana:
+    container_name: grafana_container
+    hostname: grafana
+    environment:
+      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+
     volumes:
-      - ./mysite/database:/app/database
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+
+  loki:
+    container_name: loki_container
+    hostname: loki
+    image: grafana/loki:2.9.0
+    ports:
+      - "3100:3100"
+
+volumes:
+  pgdbdata: null

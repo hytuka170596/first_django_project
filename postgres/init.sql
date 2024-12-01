@@ -1,0 +1,3 @@
+CREATE USER admin WITH PASSWORD 'lilden783';
+CREATE DATABASE postgres_db OWNER admin;
+GRANT ALL PRIVILEGES ON DATABASE postgres_db TO admin;
