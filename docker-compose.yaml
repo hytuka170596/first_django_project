@@ -1,4 +1,21 @@
 services:
+  nginx:
+    container_name: nginx
+    build:
+      context: .
+      dockerfile: ./nginx/Dockerfile
+    volumes:
+      - ./nginx/vhost.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./mysite/static:/static
+      - ./mysite/media:/uploads
+    expose:
+      - 8080
+    ports:
+      - "80:8080"
+    depends_on:
+      - django
+
   postgres_database:
     container_name: postgres_container
     build:
@@ -57,7 +74,8 @@ services:
       - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
-
+      - GF_LOG_LEVEL=warn
+      - GF_LOG_MODE=console
     volumes:
       - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
     image: grafana/grafana:latest
@@ -73,3 +91,4 @@ services:
 
 volumes:
   pgdbdata: null
+

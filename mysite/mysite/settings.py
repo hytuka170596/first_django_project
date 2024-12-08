@@ -16,6 +16,7 @@ import logging.config
 from pathlib import Path
 from datetime import timedelta
 
+# from django.conf.global_settings import CSRF_TRUSTED_ORIGINS
 # from django.conf.global_settings import INTERNAL_IPS
 
 # from django.conf.global_settings import LOGGING
@@ -36,7 +37,10 @@ SECRET_KEY = getenv(
     key="DJANGO_SECRET_KEY",
     default="django-insecure-pap^ua-&bn=)10#(uj4zb+4^wy9vq4a+!90y$olg^nw=qn(@fl",
 )
-
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:8000",
+    "http://83.147.246.117:8000",
+]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = getenv("DJANGO_DEBUG", "0") == "1"
 # DEBUG = True
@@ -210,8 +214,8 @@ LANGUAGES = [
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = "static/"
-STATIC_ROOT = BASE_DIR / "static"
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "uploads"

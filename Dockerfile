@@ -11,4 +11,8 @@ RUN poetry install
 
 COPY mysite .
 
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+ENTRYPOINT ["docker-entrypoint.sh"]
+
 CMD ["gunicorn", "mysite.wsgi:application", "--bind", "0.0.0.0:8000"]
